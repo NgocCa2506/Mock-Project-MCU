@@ -63,8 +63,8 @@ all: main-build
 main-build: STM32F407_Bootloader.elf secondary-outputs
 
 # Tool invocations
-STM32F407_Bootloader.elf STM32F407_Bootloader.map: $(OBJS) $(USER_OBJS) D:\Mock_Project\STM32F407_Bootloader\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32F407_Bootloader.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Mock_Project\STM32F407_Bootloader\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F407_Bootloader.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32F407_Bootloader.elf STM32F407_Bootloader.map: $(OBJS) $(USER_OBJS) D:\Mock-Project-MCU\STM32F407_Bootloader\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32F407_Bootloader.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Mock-Project-MCU\STM32F407_Bootloader\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32F407_Bootloader.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

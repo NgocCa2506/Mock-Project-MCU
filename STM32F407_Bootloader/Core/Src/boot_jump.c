@@ -17,26 +17,33 @@ void jump_to_app(void)
 {
     uint32_t appStack;
     uint32_t appResetHandler;
-    pFunction appEntry;
 
-    /* Read Application initial Main Stack Pointer. */
     appStack = *(volatile uint32_t *)APP_START_ADDRESS;
+    appResetHandler =
+        *(volatile uint32_t *)(APP_START_ADDRESS + 4UL);
 
-    /* Read Application Reset Handler address. */
-    appResetHandler = *(volatile uint32_t *)(APP_START_ADDRESS + 4UL);
-    appEntry = (pFunction)appResetHandler;
-
-    /* Disable interrupts. */
+    /* Khoa ngat */
     __disable_irq();
 
-    /* Stop SysTick. */
-    SysTick->CTRL = 0UL;
-    SysTick->LOAD = 0UL;
-    SysTick->VAL  = 0UL;
+    /* Dung SysTick cua Bootloader */
+    SysTick->CTRL = 0U;
+    SysTick->LOAD = 0U;
+    SysTick->VAL  = 0U;
 
-    /* Set Application Main Stack Pointer. */
-    __set_MSP(appStack);
+    /* Chuyen vector table sang Application */
+    SCB->VTOR = APP_START_ADDRESS;
+    __DSB();
+    __ISB();
 
-    /* Jump to Application Reset Handler. */
-    appEntry();
+    /*
+     * Goi Reset_Handler cua Application.
+     * Luu y: MSP chua duoc chuyen sang appStack.
+     */
+    __enable_irq();
+
+    ((void (*)(void))appResetHandler)();
+
+    while (1)
+    {
+    }
 }
