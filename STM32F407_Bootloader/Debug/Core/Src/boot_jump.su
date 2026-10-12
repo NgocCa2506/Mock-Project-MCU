@@ -1,0 +1,1 @@
+../Core/Src/boot_jump.c:16:6:jump_to_app	24	static,ignoring_inline_asm
