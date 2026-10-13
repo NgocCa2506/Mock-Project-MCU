@@ -9,41 +9,48 @@
 
 #include "main.h"
 #include "boot_jump.h"
-#include "flash_layout.h"
+#include <flash_layout.h>
 
 typedef void (*pFunction)(void);
 
+int validate_app(void)
+{
+    /* Reset handler sanity */
+    uint32_t reset_handler = *(uint32_t *)(FLASH_START_ADDRESS + RESET_HANDLER_OFFSET);
+    if ((reset_handler & 0xFF000000) != FLASH_START_ADDRESS)
+    {
+        return APP_RESET_HANDLER_INVALID;
+    }
+
+    /* Others check here */
+
+    /* Application is valid */
+    return APP_VALID;
+}
+
 void jump_to_app(void)
 {
-    uint32_t appStack;
-    uint32_t appResetHandler;
+    /* The actual application data starts immediately after the header */
+    uint32_t APP_ADDR = APP_START_ADDRESS;
 
-    appStack = *(volatile uint32_t *)APP_START_ADDRESS;
-    appResetHandler =
-        *(volatile uint32_t *)(APP_START_ADDRESS + 4UL);
-
-    /* Khoa ngat */
+    /* Disable interrupts */
     __disable_irq();
 
-    /* Dung SysTick cua Bootloader */
-    SysTick->CTRL = 0U;
-    SysTick->LOAD = 0U;
-    SysTick->VAL  = 0U;
+    /* Reset the Clock configuration to default HSI */
+    HAL_RCC_DeInit();
 
-    /* Chuyen vector table sang Application */
-    SCB->VTOR = APP_START_ADDRESS;
-    __DSB();
-    __ISB();
+    /* Stop SysTick */
+    SysTick->CTRL = 0;
+    SysTick->LOAD = 0;
+    SysTick->VAL  = 0;
 
-    /*
-     * Goi Reset_Handler cua Application.
-     * Luu y: MSP chua duoc chuyen sang appStack.
-     */
-    __enable_irq();
+    /* Set main stack pointer (MSP) to the application's stack pointer.
+     * It is located at the 1st 32-bit word of the application's vector table */
+    uint32_t app_msp = *(__IO uint32_t*)APP_ADDR;
+    __set_MSP(app_msp);
 
-    ((void (*)(void))appResetHandler)();
-
-    while (1)
-    {
-    }
+    /* Jump to application reset handler.
+     * It is located at the 2nd 32-bit word of the application's vector table */
+    void (*app_reset_handler)(void) = (void (*)(void))(*(__IO uint32_t*)(APP_ADDR + RESET_HANDLER_OFFSET));
+    app_reset_handler();
 }

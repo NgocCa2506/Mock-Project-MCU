@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "app_validate.h"
 #include "boot_jump.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -33,7 +32,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -89,7 +87,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-
+  if (APP_VALID == validate_app())
+  {
+	  jump_to_app();
+  }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,15 +100,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if (APP_VALID == validate_app())
-	  {
-		  jump_to_app();
-	  }
-	  else
-	  {
-		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-		  HAL_Delay(500U);
-	  }
+	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+	  HAL_Delay(100);
 
   }
   /* USER CODE END 3 */

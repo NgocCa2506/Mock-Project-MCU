@@ -10,6 +10,8 @@
 
 #include <stdint.h>
 
+#define RESET_HANDLER_OFFSET		4u
+
 /* STM32F407VG: 1 MB internal Flash */
 #define FLASH_START_ADDRESS         0x08000000UL
 #define FLASH_END_ADDRESS           0x080FFFFFUL

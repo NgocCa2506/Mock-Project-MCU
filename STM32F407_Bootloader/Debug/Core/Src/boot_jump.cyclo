@@ -1,1 +1,2 @@
-../Core/Src/boot_jump.c:16:6:jump_to_app	1
+../Core/Src/boot_jump.c:16:5:validate_app	1
+../Core/Src/boot_jump.c:31:6:jump_to_app	1
