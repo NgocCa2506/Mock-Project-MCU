@@ -57,7 +57,8 @@ STM32F407_Application.bin \
 
 
 # All Target
-all: main-build
+all:
+	+@$(MAKE) --no-print-directory main-build && $(MAKE) --no-print-directory post-build
 
 # Main-build Target
 main-build: STM32F407_Application.elf secondary-outputs
@@ -88,6 +89,13 @@ clean:
 	-$(RM) STM32F407_Application.bin STM32F407_Application.elf STM32F407_Application.list STM32F407_Application.map default.size.stdout
 	-@echo ' '
 
+post-build:
+	arm-none-eabi-objcopy -O binary --remove-section=.app_header "STM32F407_Application.elf" application.bin
+	py -3 "../Tools/generate_app_header.py" application.bin app_header.bin
+	arm-none-eabi-objcopy --update-section .app_header=app_header.bin "STM32F407_Application.elf" STM32F407_Application_patched.elf
+	arm-none-eabi-objcopy -O ihex STM32F407_Application_patched.elf STM32F407_Application_patched.hex
+	-@echo ' '
+
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
@@ -97,6 +105,6 @@ fail-specified-linker-script-missing:
 warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
-.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
+.PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified post-build
 
 -include ../makefile.targets

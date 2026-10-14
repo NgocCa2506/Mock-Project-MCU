@@ -1,2 +1,2 @@
-../Core/Src/boot_jump.c:16:5:validate_app	0	static
-../Core/Src/boot_jump.c:31:6:jump_to_app	8	static,ignoring_inline_asm
+../Core/Src/boot_jump.c:10:5:validate_app	8	static
+../Core/Src/boot_jump.c:46:6:jump_to_app	8	static,ignoring_inline_asm

@@ -3,51 +3,55 @@ STM32F407_Application.elf:     file format elf32-littlearm
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .isr_vector   00000188  08020000  08020000  00001000  2**0
+  0 .isr_vector   00000188  08020000  08020000  00002000  2**0
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  1 .text         0000153c  08020188  08020188  00001188  2**2
+  1 .text         0000153c  08020188  08020188  00002188  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000010  080216c4  080216c4  000026c4  2**2
-                  CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  080216d4  080216d4  0000300c  2**0
+  2 .ARM.extab    00000000  080216c4  080216c4  0000400c  2**0
                   CONTENTS
-  4 .ARM          00000008  080216d4  080216d4  000026d4  2**2
+  3 .ARM.exidx    00000008  080216c4  080216c4  000036c4  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  080216dc  080216dc  0000300c  2**0
+  4 .preinit_array 00000000  080216cc  080216cc  0000400c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  080216dc  080216dc  000026dc  2**2
-                  CONTENTS, ALLOC, LOAD, READONLY, DATA
-  7 .fini_array   00000004  080216e0  080216e0  000026e0  2**2
-                  CONTENTS, ALLOC, LOAD, READONLY, DATA
-  8 .data         0000000c  20000000  080216e4  00003000  2**2
+  5 .init_array   00000004  080216cc  080216cc  000036cc  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .ccmram       00000000  10000000  10000000  0000300c  2**0
+  6 .fini_array   00000004  080216d0  080216d0  000036d0  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .rodata       00000010  080216d4  080216d4  000036d4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         0000000c  20000000  080216e4  00004000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram       00000000  10000000  10000000  0000400c  2**0
                   CONTENTS
- 10 .bss          00000020  2000000c  2000000c  0000300c  2**2
+ 10 .bss          00000020  2000000c  2000000c  0000400c  2**2
                   ALLOC
- 11 ._user_heap_stack 00000604  2000002c  2000002c  0000300c  2**0
+ 11 .ccmram_bss   00000000  10000000  10000000  0000400c  2**0
+                  CONTENTS
+ 12 ._user_heap_stack 00000604  2000002c  2000002c  0000400c  2**0
                   ALLOC
- 12 .ARM.attributes 00000030  00000000  00000000  0000300c  2**0
+ 13 .ARM.attributes 00000030  00000000  00000000  0000400c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   000037c6  00000000  00000000  0000303c  2**0
+ 14 .app_header   0000001c  08010000  08010000  00001000  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 15 .debug_info   000038ad  00000000  00000000  0000403c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00000e41  00000000  00000000  00006802  2**0
+ 16 .debug_abbrev 00000ed5  00000000  00000000  000078e9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000408  00000000  00000000  00007648  2**3
+ 17 .debug_aranges 00000420  00000000  00000000  000087c0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_rnglists 000002e4  00000000  00000000  00007a50  2**0
+ 18 .debug_macro  0001ef19  00000000  00000000  00008be0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  0001ee79  00000000  00000000  00007d34  2**0
+ 19 .debug_line   00005261  00000000  00000000  00027af9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00004e49  00000000  00000000  00026bad  2**0
+ 20 .debug_str    000bc85b  00000000  00000000  0002cd5a  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000bc723  00000000  00000000  0002b9f6  2**0
-                  CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000043  00000000  00000000  000e8119  2**0
+ 21 .comment      00000043  00000000  00000000  000e95b5  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00000e88  00000000  00000000  000e815c  2**2
+ 22 .debug_rnglists 000002e4  00000000  00000000  000e95f8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 22 .debug_line_str 00000058  00000000  00000000  000e8fe4  2**0
+ 23 .debug_frame  00000e88  00000000  00000000  000e98dc  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 24 .debug_line_str 00000058  00000000  00000000  000ea764  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -3369,7 +3373,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(const RCC_ClkInitTypeDef  *RCC_ClkInitStru
  80214b2:	bf00      	nop
  80214b4:	40023c00 	.word	0x40023c00
  80214b8:	40023800 	.word	0x40023800
- 80214bc:	080216c4 	.word	0x080216c4
+ 80214bc:	080216d4 	.word	0x080216d4
  80214c0:	20000000 	.word	0x20000000
  80214c4:	20000004 	.word	0x20000004
 
@@ -3617,10 +3621,10 @@ __weak uint32_t HAL_RCC_GetSysClockFreq(void)
  8021696:	4798      	blx	r3
  8021698:	3601      	adds	r6, #1
  802169a:	e7f2      	b.n	8021682 <__libc_init_array+0x1e>
- 802169c:	080216dc 	.word	0x080216dc
- 80216a0:	080216dc 	.word	0x080216dc
- 80216a4:	080216dc 	.word	0x080216dc
- 80216a8:	080216e0 	.word	0x080216e0
+ 802169c:	080216cc 	.word	0x080216cc
+ 80216a0:	080216cc 	.word	0x080216cc
+ 80216a4:	080216cc 	.word	0x080216cc
+ 80216a8:	080216d0 	.word	0x080216d0
 
 080216ac <_init>:
  80216ac:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
