@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "flash_layout.h"
+#include "app_startup.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define LD5_Pin		GPIO_PIN_15
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -65,11 +66,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  /* Relocate vector table offset to start address of Application */
-  SCB->VTOR = APP_START_ADDRESS;
-
-  /* Enable interrupts */
-  __enable_irq();
+  app_startup_init();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -101,8 +98,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_TogglePin(GPIOD, LD5_Pin);
-	  HAL_Delay(100);
+	  led_toggle();
+	  HAL_Delay(LED_BLINK_PERIOD_MS);
   }
   /* USER CODE END 3 */
 }

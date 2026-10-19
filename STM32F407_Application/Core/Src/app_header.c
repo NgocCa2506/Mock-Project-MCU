@@ -1,3 +1,10 @@
+/*
+ * app_header.c
+ *
+ *  Application Header instance, placed in the .app_header section
+ *  (Flash sector 4, see flash_layout.h and the linker script).
+ */
+
 #include "app_header.h"
 
 /*

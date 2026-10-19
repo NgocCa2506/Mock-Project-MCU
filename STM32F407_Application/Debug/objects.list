@@ -1,4 +1,6 @@
 "./Core/Src/app_header.o"
+"./Core/Src/app_startup.o"
+"./Core/Src/led.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f4xx_hal_msp.o"
 "./Core/Src/stm32f4xx_it.o"

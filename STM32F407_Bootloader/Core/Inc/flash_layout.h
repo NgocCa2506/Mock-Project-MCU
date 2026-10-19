@@ -3,14 +3,15 @@
  *
  *  Created on: Oct 12, 2026
  *      Author: CA
+ *
+ *  Flash memory map of the STM32F407VG, shared by Bootloader and Application.
+ *  NOTE: keep this file byte-identical in both projects.
  */
 
 #ifndef INC_FLASH_LAYOUT_H_
 #define INC_FLASH_LAYOUT_H_
 
 #include <stdint.h>
-
-#define RESET_HANDLER_OFFSET		4u
 
 /* STM32F407VG: 1 MB internal Flash */
 #define FLASH_START_ADDRESS         0x08000000UL
@@ -45,5 +46,8 @@
 #define OTA_START_ADDRESS           0x080A0000UL
 #define OTA_END_ADDRESS             0x080FFFFFUL
 #define OTA_SIZE                    (384UL * 1024UL)
+
+/* Application vector table: word 0 = initial MSP, word 1 = Reset_Handler */
+#define RESET_HANDLER_OFFSET        4u
 
 #endif /* INC_FLASH_LAYOUT_H_ */

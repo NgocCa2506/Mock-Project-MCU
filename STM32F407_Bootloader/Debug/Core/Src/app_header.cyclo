@@ -1,3 +1,0 @@
-../Core/Src/app_header.c:17:21:app_header_get	1
-../Core/Src/app_header.c:22:10:app_header_calculate_crc32	5
-../Core/Src/app_header.c:48:21:app_header_validate	4

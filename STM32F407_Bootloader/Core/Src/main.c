@@ -18,11 +18,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "boot_jump.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "boot_validate.h"
+#include "boot_jump.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -100,8 +101,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-	  HAL_Delay(100);
+	  led_toggle();
+	  HAL_Delay(LED_BLINK_PERIOD_MS);
 
   }
   /* USER CODE END 3 */

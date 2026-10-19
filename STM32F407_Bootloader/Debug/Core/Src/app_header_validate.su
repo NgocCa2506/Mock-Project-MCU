@@ -1,0 +1,2 @@
+../Core/Src/app_header_validate.c:23:21:app_header_get	0	static
+../Core/Src/app_header_validate.c:28:21:app_header_validate	8	static
