@@ -1,0 +1,3 @@
+../Core/Src/crc_benchmark.c:5:17:benchmark_one	24	static,ignoring_inline_asm
+../Core/Src/crc_benchmark.c:26:6:crc_benchmark_dwt_init	0	static,ignoring_inline_asm
+../Core/Src/crc_benchmark.c:37:6:crc_benchmark_run	16	static

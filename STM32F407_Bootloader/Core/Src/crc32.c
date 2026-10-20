@@ -4,6 +4,7 @@
  *  CRC-32 calculation (lookup-table implementation).
  */
 
+#include "main.h"
 #include "crc32.h"
 
 /*
@@ -28,7 +29,6 @@ static const uint32_t poly8_lookup[256] =
     0x1ADAD47DUL, 0x6DDDE4EBUL, 0xF4D4B551UL, 0x83D385C7UL,
     0x136C9856UL, 0x646BA8C0UL, 0xFD62F97AUL, 0x8A65C9ECUL,
     0x14015C4FUL, 0x63066CD9UL, 0xFA0F3D63UL, 0x8D080DF5UL,
-
     0x3B6E20C8UL, 0x4C69105EUL, 0xD56041E4UL, 0xA2677172UL,
     0x3C03E4D1UL, 0x4B04D447UL, 0xD20D85FDUL, 0xA50AB56BUL,
     0x35B5A8FAUL, 0x42B2986CUL, 0xDBBBC9D6UL, 0xACBCF940UL,
@@ -37,7 +37,6 @@ static const uint32_t poly8_lookup[256] =
     0x21B4F4B5UL, 0x56B3C423UL, 0xCFBA9599UL, 0xB8BDA50FUL,
     0x2802B89EUL, 0x5F058808UL, 0xC60CD9B2UL, 0xB10BE924UL,
     0x2F6F7C87UL, 0x58684C11UL, 0xC1611DABUL, 0xB6662D3DUL,
-
     0x76DC4190UL, 0x01DB7106UL, 0x98D220BCUL, 0xEFD5102AUL,
     0x71B18589UL, 0x06B6B51FUL, 0x9FBFE4A5UL, 0xE8B8D433UL,
     0x7807C9A2UL, 0x0F00F934UL, 0x9609A88EUL, 0xE10E9818UL,
@@ -46,7 +45,6 @@ static const uint32_t poly8_lookup[256] =
     0x6C0695EDUL, 0x1B01A57BUL, 0x8208F4C1UL, 0xF50FC457UL,
     0x65B0D9C6UL, 0x12B7E950UL, 0x8BBEB8EAUL, 0xFCB9887CUL,
     0x62DD1DDFUL, 0x15DA2D49UL, 0x8CD37CF3UL, 0xFBD44C65UL,
-
     0x4DB26158UL, 0x3AB551CEUL, 0xA3BC0074UL, 0xD4BB30E2UL,
     0x4ADFA541UL, 0x3DD895D7UL, 0xA4D1C46DUL, 0xD3D6F4FBUL,
     0x4369E96AUL, 0x346ED9FCUL, 0xAD678846UL, 0xDA60B8D0UL,
@@ -55,7 +53,6 @@ static const uint32_t poly8_lookup[256] =
     0x5768B525UL, 0x206F85B3UL, 0xB966D409UL, 0xCE61E49FUL,
     0x5EDEF90EUL, 0x29D9C998UL, 0xB0D09822UL, 0xC7D7A8B4UL,
     0x59B33D17UL, 0x2EB40D81UL, 0xB7BD5C3BUL, 0xC0BA6CADUL,
-
     0xEDB88320UL, 0x9ABFB3B6UL, 0x03B6E20CUL, 0x74B1D29AUL,
     0xEAD54739UL, 0x9DD277AFUL, 0x04DB2615UL, 0x73DC1683UL,
     0xE3630B12UL, 0x94643B84UL, 0x0D6D6A3EUL, 0x7A6A5AA8UL,
@@ -64,7 +61,6 @@ static const uint32_t poly8_lookup[256] =
     0xF762575DUL, 0x806567CBUL, 0x196C3671UL, 0x6E6B06E7UL,
     0xFED41B76UL, 0x89D32BE0UL, 0x10DA7A5AUL, 0x67DD4ACCUL,
     0xF9B9DF6FUL, 0x8EBEEFF9UL, 0x17B7BE43UL, 0x60B08ED5UL,
-
     0xD6D6A3E8UL, 0xA1D1937EUL, 0x38D8C2C4UL, 0x4FDFF252UL,
     0xD1BB67F1UL, 0xA6BC5767UL, 0x3FB506DDUL, 0x48B2364BUL,
     0xD80D2BDAUL, 0xAF0A1B4CUL, 0x36034AF6UL, 0x41047A60UL,
@@ -73,7 +69,6 @@ static const uint32_t poly8_lookup[256] =
     0xCC0C7795UL, 0xBB0B4703UL, 0x220216B9UL, 0x5505262FUL,
     0xC5BA3BBEUL, 0xB2BD0B28UL, 0x2BB45A92UL, 0x5CB36A04UL,
     0xC2D7FFA7UL, 0xB5D0CF31UL, 0x2CD99E8BUL, 0x5BDEAE1DUL,
-
     0x9B64C2B0UL, 0xEC63F226UL, 0x756AA39CUL, 0x026D930AUL,
     0x9C0906A9UL, 0xEB0E363FUL, 0x72076785UL, 0x05005713UL,
     0x95BF4A82UL, 0xE2B87A14UL, 0x7BB12BAEUL, 0x0CB61B38UL,
@@ -82,7 +77,6 @@ static const uint32_t poly8_lookup[256] =
     0x81BE16CDUL, 0xF6B9265BUL, 0x6FB077E1UL, 0x18B74777UL,
     0x88085AE6UL, 0xFF0F6A70UL, 0x66063BCAUL, 0x11010B5CUL,
     0x8F659EFFUL, 0xF862AE69UL, 0x616BFFD3UL, 0x166CCF45UL,
-
     0xA00AE278UL, 0xD70DD2EEUL, 0x4E048354UL, 0x3903B3C2UL,
     0xA7672661UL, 0xD06016F7UL, 0x4969474DUL, 0x3E6E77DBUL,
     0xAED16A4AUL, 0xD9D65ADCUL, 0x40DF0B66UL, 0x37D83BF0UL,
@@ -93,47 +87,124 @@ static const uint32_t poly8_lookup[256] =
     0xB40BBE37UL, 0xC30C8EA1UL, 0x5A05DF1BUL, 0x2D02EF8DUL
 };
 
-/*
- * Calculate CRC-32 over a byte buffer using the lookup table.
- *
- * data:
- *     Start address of the data buffer.
- *
- * byte_length:
- *     Number of bytes included in the calculation.
- */
-uint32_t crc32_byte(
-    const uint8_t *data,
-    uint32_t byte_length)
+void crc32_fill(uint32_t table[256])
 {
-    uint32_t crc = 0xFFFFFFFFUL;
-    uint32_t table_index;
+    uint32_t index;
+    uint32_t value;
+    uint32_t bit;
+
+    for (index = 0UL; index < 256UL; index++)
+    {
+        value = index;
+
+        for (bit = 0UL; bit < 8UL; bit++)
+        {
+            value = ((value & 1UL) != 0UL)
+                  ? ((value >> 1U) ^ CRC32_REFLECTED_POLYNOMIAL)
+                  :  (value >> 1U);
+        }
+
+        table[index] = value;
+    }
+}
+
+uint32_t crc32_bitwise(const uint8_t *data, uint32_t byte_length)
+{
+    uint32_t crc = CRC32_INITIAL_VALUE;
+    uint32_t bit;
 
     while (byte_length != 0UL)
     {
-        /*
-         * XOR the low byte of CRC with the current data byte.
-         * The result is always in the range 0 to 255.
-         */
-        table_index =
-            ((uint32_t)((uint8_t)crc) ^
-             (uint32_t)(*data));
+        crc ^= (uint32_t)(*data);
 
-        crc =
-            poly8_lookup[table_index] ^
-            (crc >> 8U);
+        for (bit = 0UL; bit < 8UL; bit++)
+        {
+            crc = ((crc & 1UL) != 0UL)
+                ? ((crc >> 1U) ^ CRC32_REFLECTED_POLYNOMIAL)
+                :  (crc >> 1U);
+        }
 
         data++;
         byte_length--;
     }
 
-    /*
-     * Final XOR.
-     *
-     * The following expressions are equivalent:
-     *
-     * return ~crc;
-     * return crc ^ 0xFFFFFFFFUL;
-     */
-    return crc ^ 0xFFFFFFFFUL;
+    return crc ^ CRC32_FINAL_XOR_VALUE;
 }
+
+uint32_t crc32_lookup(const uint8_t *data, uint32_t byte_length)
+{
+    uint32_t crc = CRC32_INITIAL_VALUE;
+    uint32_t table_index;
+
+    while (byte_length != 0UL)
+    {
+        table_index = ((uint32_t)((uint8_t)crc)) ^ (uint32_t)(*data);
+        crc = poly8_lookup[table_index] ^ (crc >> 8U);
+
+        data++;
+        byte_length--;
+    }
+
+    return crc ^ CRC32_FINAL_XOR_VALUE;
+}
+
+uint32_t crc32_hardware(const uint8_t *data, uint32_t byte_length)
+{
+    uint32_t word;
+    uint32_t crc_state;
+    uint32_t table_index;
+
+    /* Enable the STM32F407 CRC peripheral clock. */
+    RCC->AHB1ENR |= RCC_AHB1ENR_CRCEN;
+    __DSB();
+
+    /* Reset CRC_DR to 0xFFFFFFFF. */
+    CRC->CR = CRC_CR_RESET;
+
+    /*
+     * STM32F407 CRC hardware is MSB-first with polynomial 0x04C11DB7.
+     * __RBIT() converts each packed little-endian word so the result matches
+     * reflected CRC-32/ISO-HDLC used by zlib.crc32().
+     */
+    while (byte_length >= 4UL)
+    {
+        word = ((uint32_t)data[0])       |
+               ((uint32_t)data[1] << 8U) |
+               ((uint32_t)data[2] << 16U)|
+               ((uint32_t)data[3] << 24U);
+
+        CRC->DR = __RBIT(word);
+
+        data += 4;
+        byte_length -= 4UL;
+    }
+
+    /* Convert the hardware MSB-first state to the reflected software state. */
+    crc_state = __RBIT(CRC->DR);
+
+    /* STM32F407 accepts 32-bit CRC input words, so process 0..3 tail bytes here. */
+    while (byte_length != 0UL)
+    {
+        table_index = ((uint32_t)((uint8_t)crc_state)) ^ (uint32_t)(*data);
+        crc_state = poly8_lookup[table_index] ^ (crc_state >> 8U);
+
+        data++;
+        byte_length--;
+    }
+
+    return crc_state ^ CRC32_FINAL_XOR_VALUE;
+}
+
+uint32_t crc32_calculate(const uint8_t *data, uint32_t byte_length)
+{
+#if (CRC_SELECTED_ALGORITHM == CRC_ALGORITHM_BITWISE)
+    return crc32_bitwise(data, byte_length);
+#elif (CRC_SELECTED_ALGORITHM == CRC_ALGORITHM_LOOKUP_TABLE)
+    return crc32_lookup(data, byte_length);
+#elif (CRC_SELECTED_ALGORITHM == CRC_ALGORITHM_HARDWARE)
+    return crc32_hardware(data, byte_length);
+#else
+#error "Unsupported CRC_SELECTED_ALGORITHM"
+#endif
+}
+

@@ -2,6 +2,7 @@
 "./Core/Src/boot_jump.o"
 "./Core/Src/boot_validate.o"
 "./Core/Src/crc32.o"
+"./Core/Src/crc_benchmark.o"
 "./Core/Src/led.o"
 "./Core/Src/main.o"
 "./Core/Src/stm32f4xx_hal_msp.o"

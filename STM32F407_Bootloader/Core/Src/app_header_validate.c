@@ -1,7 +1,8 @@
 /*
  * app_header_validate.c
  *
- *  Read and validate the Application Header stored at APP_HEADER_START_ADDRESS.
+ * Read and validate the Application Header
+ * stored at APP_HEADER_START_ADDRESS.
  */
 
 #include "app_header_validate.h"
@@ -32,6 +33,10 @@ app_header_status_t app_header_validate(void)
     uint32_t app_end_address;
     uint32_t calculated_crc;
 
+    /*
+     * Read Application Header from:
+     * 0x08010000.
+     */
     header = app_header_get();
 
     /*
@@ -50,7 +55,7 @@ app_header_status_t app_header_validate(void)
 
     /*
      * 2. Application Size must be greater than zero
-     * and must not exceed the reserved Application region.
+     * and must not exceed the Application region.
      */
     if ((header->app_size == 0UL) ||
         (header->app_size > APP_SIZE))
@@ -59,9 +64,9 @@ app_header_status_t app_header_validate(void)
     }
 
     /*
-     * Check that app_size fits completely inside:
+     * Ensure app_size fits completely inside:
      *
-     * 0x08020000 - 0x0807FFFF
+     * 0x08020000 - 0x0807FFFF.
      */
     if (header->app_size >
         (APP_END_ADDRESS -
@@ -72,7 +77,8 @@ app_header_status_t app_header_validate(void)
     }
 
     /*
-     * Calculate the address of the final Application byte.
+     * Calculate the address of the last
+     * Application byte.
      */
     app_end_address =
         APP_START_ADDRESS +
@@ -92,15 +98,18 @@ app_header_status_t app_header_validate(void)
      *
      * Number of bytes:
      *     header->app_size
+     *
+     * crc32_calculate() selects the algorithm using:
+     *     CRC_SELECTED_ALGORITHM.
      */
     calculated_crc =
-        crc32_byte(
+        crc32_calculate(
             (const uint8_t *)APP_START_ADDRESS,
             header->app_size
         );
 
     /*
-     * 4. Compare calculated CRC with the expected CRC
+     * 4. Compare calculated CRC with the CRC
      * stored in Application Header.
      */
     if (calculated_crc != header->app_crc)

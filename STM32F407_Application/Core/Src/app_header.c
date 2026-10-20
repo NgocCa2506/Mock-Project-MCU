@@ -8,9 +8,10 @@
 #include "app_header.h"
 
 /*
- * app_size and app_crc are placeholders in the original ELF.
- * The post-build script calculates their real values from application.bin
- * and creates app_header.bin. objcopy then updates this section.
+ * The Magic Number is defined here. app_size and app_crc must be the size and
+ * CRC-32 of application.bin (code only, produced by the post-build step).
+ * After changing Application code: build, run Tools/app_bin_info.py on
+ * Debug/application.bin, paste the result below, then build again.
  */
 __attribute__((used, section(APP_HEADER_SECTION_NAME), aligned(4)))
 const app_header_t g_app_header =
@@ -23,6 +24,6 @@ const app_header_t g_app_header =
         APP_MAGIC_WORD_3,
         APP_MAGIC_WORD_4
     },
-    .app_size = 0UL,
-    .app_crc  = 0UL
+    .app_size = 0x00001710UL,
+    .app_crc  = 0x988584F6UL
 };

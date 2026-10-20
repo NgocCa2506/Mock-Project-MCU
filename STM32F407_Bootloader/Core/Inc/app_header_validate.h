@@ -1,16 +1,23 @@
-/*
- * app_header_validate.h
- *
- *  Read and validate the Application Header stored at APP_HEADER_START_ADDRESS.
- *  The header format itself is defined in app_header.h.
- */
-
 #ifndef INC_APP_HEADER_VALIDATE_H_
 #define INC_APP_HEADER_VALIDATE_H_
 
 #include <stdint.h>
 
-#include "app_header.h"
+#define APP_MAGIC_WORD_COUNT    5U
+
+#define APP_MAGIC_WORD_0        0x41505048UL
+#define APP_MAGIC_WORD_1        0x53544D33UL
+#define APP_MAGIC_WORD_2        0x32463430UL
+#define APP_MAGIC_WORD_3        0x37424F4FUL
+#define APP_MAGIC_WORD_4        0x54415050UL
+
+typedef struct
+{
+    uint32_t magic_number[APP_MAGIC_WORD_COUNT];
+    uint32_t app_size;
+    uint32_t app_crc;
+
+} app_header_t;
 
 typedef enum
 {
@@ -24,10 +31,17 @@ typedef enum
 
 } app_header_status_t;
 
+/*
+ * Return a pointer to the Application Header
+ * stored at APP_HEADER_START_ADDRESS.
+ */
 const app_header_t *app_header_get(void);
 
 /*
- * Validate Magic Number, Size and CRC.
+ * Validate:
+ * - Magic Number[5]
+ * - Application Size
+ * - Application CRC
  */
 app_header_status_t app_header_validate(void);
 

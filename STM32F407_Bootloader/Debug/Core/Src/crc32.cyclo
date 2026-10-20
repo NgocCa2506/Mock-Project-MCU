@@ -1,1 +1,5 @@
-../Core/Src/crc32.c:105:10:crc32_byte	3
+../Core/Src/crc32.c:90:6:crc32_fill	4
+../Core/Src/crc32.c:111:10:crc32_bitwise	5
+../Core/Src/crc32.c:134:10:crc32_lookup	3
+../Core/Src/crc32.c:151:10:crc32_hardware	5
+../Core/Src/crc32.c:198:10:crc32_calculate	1

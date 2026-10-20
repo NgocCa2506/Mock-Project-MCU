@@ -90,12 +90,7 @@ clean:
 	-@echo ' '
 
 post-build:
-	arm-none-eabi-objcopy -O binary --remove-section=.app_header "STM32F407_Application.elf" app_code_temp.bin
-	py -3 "../Tools/generate_app_header.py" app_code_temp.bin app_header_temp.bin
-	arm-none-eabi-objcopy --update-section .app_header=app_header_temp.bin "STM32F407_Application.elf" application_patched_temp.elf
-	cp -f application_patched_temp.elf "STM32F407_Application.elf"
-	arm-none-eabi-objcopy -O binary --gap-fill=0xFF "STM32F407_Application.elf" STM32F407_Application.bin
-	rm -f app_code_temp.bin app_header_temp.bin application_patched_temp.elf
+	arm-none-eabi-objcopy -O binary --remove-section=.app_header STM32F407_Application.elf application.bin
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
