@@ -1,5 +1,6 @@
 "./Core/Src/app_header_validate.o"
 "./Core/Src/boot_jump.o"
+"./Core/Src/boot_ota.o"
 "./Core/Src/boot_validate.o"
 "./Core/Src/crc32.o"
 "./Core/Src/crc_benchmark.o"

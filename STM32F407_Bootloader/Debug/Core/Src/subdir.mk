@@ -7,6 +7,7 @@
 C_SRCS += \
 ../Core/Src/app_header_validate.c \
 ../Core/Src/boot_jump.c \
+../Core/Src/boot_ota.c \
 ../Core/Src/boot_validate.c \
 ../Core/Src/crc32.c \
 ../Core/Src/crc_benchmark.c \
@@ -21,6 +22,7 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/app_header_validate.o \
 ./Core/Src/boot_jump.o \
+./Core/Src/boot_ota.o \
 ./Core/Src/boot_validate.o \
 ./Core/Src/crc32.o \
 ./Core/Src/crc_benchmark.o \
@@ -35,6 +37,7 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/app_header_validate.d \
 ./Core/Src/boot_jump.d \
+./Core/Src/boot_ota.d \
 ./Core/Src/boot_validate.d \
 ./Core/Src/crc32.d \
 ./Core/Src/crc_benchmark.d \
@@ -54,7 +57,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/app_header_validate.cyclo ./Core/Src/app_header_validate.d ./Core/Src/app_header_validate.o ./Core/Src/app_header_validate.su ./Core/Src/boot_jump.cyclo ./Core/Src/boot_jump.d ./Core/Src/boot_jump.o ./Core/Src/boot_jump.su ./Core/Src/boot_validate.cyclo ./Core/Src/boot_validate.d ./Core/Src/boot_validate.o ./Core/Src/boot_validate.su ./Core/Src/crc32.cyclo ./Core/Src/crc32.d ./Core/Src/crc32.o ./Core/Src/crc32.su ./Core/Src/crc_benchmark.cyclo ./Core/Src/crc_benchmark.d ./Core/Src/crc_benchmark.o ./Core/Src/crc_benchmark.su ./Core/Src/led.cyclo ./Core/Src/led.d ./Core/Src/led.o ./Core/Src/led.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
+	-$(RM) ./Core/Src/app_header_validate.cyclo ./Core/Src/app_header_validate.d ./Core/Src/app_header_validate.o ./Core/Src/app_header_validate.su ./Core/Src/boot_jump.cyclo ./Core/Src/boot_jump.d ./Core/Src/boot_jump.o ./Core/Src/boot_jump.su ./Core/Src/boot_ota.cyclo ./Core/Src/boot_ota.d ./Core/Src/boot_ota.o ./Core/Src/boot_ota.su ./Core/Src/boot_validate.cyclo ./Core/Src/boot_validate.d ./Core/Src/boot_validate.o ./Core/Src/boot_validate.su ./Core/Src/crc32.cyclo ./Core/Src/crc32.d ./Core/Src/crc32.o ./Core/Src/crc32.su ./Core/Src/crc_benchmark.cyclo ./Core/Src/crc_benchmark.d ./Core/Src/crc_benchmark.o ./Core/Src/crc_benchmark.su ./Core/Src/led.cyclo ./Core/Src/led.d ./Core/Src/led.o ./Core/Src/led.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/stm32f4xx_hal_msp.cyclo ./Core/Src/stm32f4xx_hal_msp.d ./Core/Src/stm32f4xx_hal_msp.o ./Core/Src/stm32f4xx_hal_msp.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
 
 .PHONY: clean-Core-2f-Src
 

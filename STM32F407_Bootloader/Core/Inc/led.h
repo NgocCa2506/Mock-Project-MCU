@@ -11,9 +11,11 @@
 #include "main.h"
 
 #define LED_PORT                GPIOD
-#define LED_PIN                 GPIO_PIN_14
+#define LED_PIN                 GPIO_PIN_14     /* Red    : Bootloader   */
+#define LED_ORANGE_PIN          GPIO_PIN_13     /* Orange : OTA          */
 #define LED_BLINK_PERIOD_MS     100U
 
 void led_toggle(void);
+void led_orange_toggle(void);
 
 #endif /* INC_LED_H_ */

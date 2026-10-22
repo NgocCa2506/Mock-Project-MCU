@@ -31,6 +31,7 @@
 #include "flash_layout.h"
 #include "crc32.h"
 #include "crc_benchmark.h"
+#include "boot_ota.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,7 +45,10 @@
  * Set to 1U to stop in the Bootloader after printing benchmark results.
  * Set to 0U to jump automatically when validation and benchmark pass.
  */
-#define CRC_BENCHMARK_HOLD_BEFORE_JUMP    1U
+#define CRC_BENCHMARK_HOLD_BEFORE_JUMP    0U
+
+/* Bootloader red LED blink before starting the App (toggles, 2 = 1 blink). */
+#define BOOT_RED_BLINK_TOGGLES            6U
 
 /* USER CODE END PD */
 
@@ -106,6 +110,7 @@ int main(void)
 {
     /* USER CODE BEGIN 1 */
     const app_header_t *app_header;
+    uint32_t i;
     /* USER CODE END 1 */
 
     /* MCU Configuration------------------------------------------------------*/
@@ -127,8 +132,21 @@ int main(void)
 
     /* USER CODE BEGIN 2 */
 
+    /* Bootloader is running: blink red LED */
+    for (i = 0U; i < BOOT_RED_BLINK_TOGGLES; i++)
+    {
+        led_toggle();
+        HAL_Delay(LED_BLINK_PERIOD_MS);
+    }
+
     /* Header is stored at APP_HEADER_START_ADDRESS. */
     app_header = app_header_get();
+
+    /* App asked for OTA (User button): run OTA, then continue the jump flow */
+    if (app_header->ota_flag == 1U)
+    {
+        boot_ota_run();
+    }
 
     /*
      * validate_app() must check the Header and Application before benchmark:
@@ -240,10 +258,10 @@ static void MX_GPIO_Init(void)
     __HAL_RCC_GPIOA_CLK_ENABLE();
 
     /* Configure GPIO pin Output Level */
-    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13|GPIO_PIN_14, GPIO_PIN_RESET);
 
-    /* Configure GPIO pin: PD14 */
-    GPIO_InitStruct.Pin = GPIO_PIN_14;
+    /* Configure GPIO pins: PD13 (orange), PD14 (red) */
+    GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

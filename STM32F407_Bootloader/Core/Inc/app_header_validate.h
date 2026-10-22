@@ -16,6 +16,8 @@ typedef struct
     uint32_t magic_number[APP_MAGIC_WORD_COUNT];
     uint32_t app_size;
     uint32_t app_crc;
+    uint32_t version;
+    uint32_t ota_flag;
 
 } app_header_t;
 

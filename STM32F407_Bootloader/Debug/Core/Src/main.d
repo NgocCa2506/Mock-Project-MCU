@@ -26,7 +26,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Core/Inc/boot_validate.h ../Core/Inc/boot_jump.h ../Core/Inc/led.h \
  ../Core/Inc/main.h ../Core/Inc/app_header.h ../Core/Inc/flash_layout.h \
- ../Core/Inc/crc32.h ../Core/Inc/crc_benchmark.h
+ ../Core/Inc/crc32.h ../Core/Inc/crc_benchmark.h ../Core/Inc/boot_ota.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -61,3 +61,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/flash_layout.h:
 ../Core/Inc/crc32.h:
 ../Core/Inc/crc_benchmark.h:
+../Core/Inc/boot_ota.h:

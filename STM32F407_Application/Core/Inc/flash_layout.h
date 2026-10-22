@@ -42,7 +42,10 @@
 #define RESERVED2_END_ADDRESS       0x0809FFFFUL
 #define RESERVED2_SIZE              (128UL * 1024UL)
 
-/* Sector 9-11: OTA image, reserved for later parts, 384 KB */
+/* OTA Header: first bytes of Sector 8 (same format as App Header) */
+#define OTA_HEADER_START_ADDRESS    RESERVED2_START_ADDRESS
+
+/* Sector 9-11: OTA image (OTA code), 384 KB */
 #define OTA_START_ADDRESS           0x080A0000UL
 #define OTA_END_ADDRESS             0x080FFFFFUL
 #define OTA_SIZE                    (384UL * 1024UL)

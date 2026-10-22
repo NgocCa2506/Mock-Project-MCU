@@ -6,6 +6,7 @@
  */
 
 #include "app_header.h"
+#include "app_config.h"
 
 /*
  * The Magic Number is defined here. app_size and app_crc must be the size and
@@ -24,6 +25,15 @@ const app_header_t g_app_header =
         APP_MAGIC_WORD_3,
         APP_MAGIC_WORD_4
     },
-    .app_size = 0x00001710UL,
-    .app_crc  = 0x988584F6UL
+#if (APP_BUILD_OTA == 1U)
+    /* OTA App: values of the OTA build */
+    .app_size = 0x00001E14UL,
+    .app_crc  = 0xE542A3DFUL,
+#else
+    /* Current App */
+    .app_size = 0x00001E14UL,
+    .app_crc  = 0x7FA60552UL,
+#endif
+    .version  = 1UL,
+    .ota_flag = 0UL
 };

@@ -34,6 +34,19 @@ typedef struct
      */
     uint32_t app_crc;
 
+    /*
+     * App version. The Bootloader increases it by 1 after every
+     * successful OTA update.
+     */
+    uint32_t version;
+
+    /*
+     * 1: the App asked for an OTA update (User button), the Bootloader
+     *    runs OTA at the next reset and clears it.
+     * 0: normal boot.
+     */
+    uint32_t ota_flag;
+
 } app_header_t;
 
 /*

@@ -91,6 +91,7 @@ clean:
 
 post-build:
 	arm-none-eabi-objcopy -O binary --remove-section=.app_header STM32F407_Application.elf application.bin
+	arm-none-eabi-objcopy -O binary --only-section=.app_header STM32F407_Application.elf app_header.bin
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
