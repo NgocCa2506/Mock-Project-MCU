@@ -23,6 +23,7 @@
 
 volatile uint32_t g_ota_cycles_overwrite   = 0U;
 volatile uint32_t g_ota_cycles_erase_write = 0U;
+volatile uint32_t g_ota_cycles_erase_smart = 0U;
 
 static const uint32_t s_magic[APP_MAGIC_WORD_COUNT] =
 {
@@ -38,13 +39,17 @@ static void header_write(const app_header_t *header)
 {
     FLASH_EraseInitTypeDef erase;
     uint32_t sector_error;
-    const uint32_t *word = (const uint32_t *)header;
     uint32_t i;
 
     erase.TypeErase    = FLASH_TYPEERASE_SECTORS;
     erase.Sector       = FLASH_SECTOR_4;
     erase.NbSectors    = 1U;
+
+#if (FLASH_PROGRAM_VOLTAGE == FLASH_PROGRAM_VOLTAGE_RANGE_4)
+    erase.VoltageRange = FLASH_VOLTAGE_RANGE_4;
+#else
     erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+#endif
 
     HAL_FLASH_Unlock();
 
@@ -53,15 +58,38 @@ static void header_write(const app_header_t *header)
         Error_Handler();
     }
 
-    for (i = 0U; i < (sizeof(app_header_t) / 4U); i++)
+#if (FLASH_PROGRAM_VOLTAGE == FLASH_PROGRAM_VOLTAGE_RANGE_4)
+    /* Range 4: program 8 bytes (doubleword) at a time. */
     {
-        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,
-                              APP_HEADER_START_ADDRESS + (i * 4U),
-                              word[i]) != HAL_OK)
+        const uint64_t *dword = (const uint64_t *)header;
+        uint32_t count = (sizeof(app_header_t) + 7U) / 8U;
+
+        for (i = 0U; i < count; i++)
         {
-            Error_Handler();
+            if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,
+                                  APP_HEADER_START_ADDRESS + (i * 8U),
+                                  dword[i]) != HAL_OK)
+            {
+                Error_Handler();
+            }
         }
     }
+#else
+    /* Range 3: program 4 bytes (word) at a time. */
+    {
+        const uint32_t *word = (const uint32_t *)header;
+
+        for (i = 0U; i < (sizeof(app_header_t) / 4U); i++)
+        {
+            if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD,
+                                  APP_HEADER_START_ADDRESS + (i * 4U),
+                                  word[i]) != HAL_OK)
+            {
+                Error_Handler();
+            }
+        }
+    }
+#endif
 
     HAL_FLASH_Lock();
 }
@@ -95,11 +123,33 @@ static uint8_t ota_image_valid(const app_header_t *ota_header)
     return 1U;
 }
 
-/* Write the OTA binary word by word over the App code. Flash must be unlocked. */
+/* Write the OTA binary over the App code. Flash must be unlocked. */
 static void ota_copy_binary(uint32_t size)
 {
-    uint32_t words = (size + 3U) / 4U;
     uint32_t i;
+
+#if (FLASH_PROGRAM_VOLTAGE == FLASH_PROGRAM_VOLTAGE_RANGE_4)
+    /* Range 4: program 8 bytes (doubleword) at a time.
+     * app_size should be a multiple of 8; round up to be safe. */
+    uint32_t dwords = (size + 7U) / 8U;
+
+    for (i = 0U; i < dwords; i++)
+    {
+        if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD,
+                              APP_START_ADDRESS + (i * 8U),
+                              *(volatile uint64_t *)(OTA_START_ADDRESS + (i * 8U))) != HAL_OK)
+        {
+            Error_Handler();
+        }
+
+        if ((i % (OTA_BLINK_WORDS / 2U)) == 0U)
+        {
+            led_orange_toggle();
+        }
+    }
+#else
+    /* Range 3: program 4 bytes (word) at a time. */
+    uint32_t words = (size + 3U) / 4U;
 
     for (i = 0U; i < words; i++)
     {
@@ -115,6 +165,7 @@ static void ota_copy_binary(uint32_t size)
             led_orange_toggle();
         }
     }
+#endif
 }
 
 void boot_ota_run(void)
@@ -158,7 +209,7 @@ void boot_ota_run(void)
     g_ota_cycles_overwrite = DWT->CYCCNT - start_cycle;
 
 #elif (OTA_METHOD == OTA_METHOD_ERASE_FIRST)
-    /* Method 2: erase App sectors 5-7, then write */
+    /* Method 2: erase all App sectors 5-7 (3 sectors), then write */
     {
         FLASH_EraseInitTypeDef erase;
         uint32_t sector_error;
@@ -166,7 +217,12 @@ void boot_ota_run(void)
         erase.TypeErase    = FLASH_TYPEERASE_SECTORS;
         erase.Sector       = FLASH_SECTOR_5;
         erase.NbSectors    = 3U;
+
+#if (FLASH_PROGRAM_VOLTAGE == FLASH_PROGRAM_VOLTAGE_RANGE_4)
+        erase.VoltageRange = FLASH_VOLTAGE_RANGE_4;
+#else
         erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+#endif
 
         if (HAL_FLASHEx_Erase(&erase, &sector_error) != HAL_OK)
         {
@@ -176,8 +232,46 @@ void boot_ota_run(void)
     ota_copy_binary(new_header.app_size);
     g_ota_cycles_erase_write = DWT->CYCCNT - start_cycle;
 
+#elif (OTA_METHOD == OTA_METHOD_ERASE_SMART)
+    /* Method 3: erase only the sectors actually used by app_size, then write.
+     *
+     * App region: Sector 5, 6, 7 – each APP_SECTOR_SIZE (128 KB).
+     *   app_size <= 128 KB  -> erase 1 sector  (Sector 5)
+     *   app_size <= 256 KB  -> erase 2 sectors (Sector 5-6)
+     *   app_size <= 384 KB  -> erase 3 sectors (Sector 5-7)
+     */
+    {
+        FLASH_EraseInitTypeDef erase;
+        uint32_t sector_error;
+        uint32_t nb_sectors;
+
+        nb_sectors = (new_header.app_size + APP_SECTOR_SIZE - 1U) / APP_SECTOR_SIZE;
+
+        if (nb_sectors == 0U || nb_sectors > APP_SECTOR_COUNT)
+        {
+            nb_sectors = APP_SECTOR_COUNT;  /* safety clamp */
+        }
+
+        erase.TypeErase    = FLASH_TYPEERASE_SECTORS;
+        erase.Sector       = APP_SECTOR_FIRST;
+        erase.NbSectors    = nb_sectors;
+
+#if (FLASH_PROGRAM_VOLTAGE == FLASH_PROGRAM_VOLTAGE_RANGE_4)
+        erase.VoltageRange = FLASH_VOLTAGE_RANGE_4;
 #else
-#error "Invalid OTA_METHOD"
+        erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+#endif
+
+        if (HAL_FLASHEx_Erase(&erase, &sector_error) != HAL_OK)
+        {
+            Error_Handler();
+        }
+    }
+    ota_copy_binary(new_header.app_size);
+    g_ota_cycles_erase_smart = DWT->CYCCNT - start_cycle;
+
+#else
+#error "Invalid OTA_METHOD: select OTA_METHOD_OVERWRITE, OTA_METHOD_ERASE_FIRST, or OTA_METHOD_ERASE_SMART"
 #endif
 
     HAL_FLASH_Lock();

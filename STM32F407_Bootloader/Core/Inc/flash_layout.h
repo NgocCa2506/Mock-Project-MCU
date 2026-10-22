@@ -32,10 +32,13 @@
 #define APP_HEADER_END_ADDRESS      0x0801FFFFUL
 #define APP_HEADER_SIZE             (64UL * 1024UL)
 
-/* Sector 5-7: Active Application, 384 KB */
+/* Sector 5-7: Active Application, 384 KB (each sector is 128 KB) */
 #define APP_START_ADDRESS           0x08020000UL
 #define APP_END_ADDRESS             0x0807FFFFUL
 #define APP_SIZE                    (384UL * 1024UL)
+#define APP_SECTOR_SIZE             (128UL * 1024UL)  /* size of one App sector */
+#define APP_SECTOR_COUNT            3U                 /* Sector 5, 6, 7 */
+#define APP_SECTOR_FIRST            FLASH_SECTOR_5
 
 /* Sector 8: Reserved, 128 KB */
 #define RESERVED2_START_ADDRESS     0x08080000UL

@@ -1,2 +1,2 @@
-../Core/Src/boot_ota.c:37:13:header_write	4
-../Core/Src/boot_ota.c:120:6:boot_ota_run	11
+../Core/Src/boot_ota.c:38:13:header_write	4
+../Core/Src/boot_ota.c:171:6:boot_ota_run	11

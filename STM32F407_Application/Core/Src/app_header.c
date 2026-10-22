@@ -28,11 +28,11 @@ const app_header_t g_app_header =
 #if (APP_BUILD_OTA == 1U)
     /* OTA App: values of the OTA build */
     .app_size = 0x00001E14UL,
-    .app_crc  = 0xE542A3DFUL,
+    .app_crc  = 0x03B7A4E7,
 #else
     /* Current App */
     .app_size = 0x00001E14UL,
-    .app_crc  = 0x7FA60552UL,
+    .app_crc  = 0x9953026AUL,
 #endif
     .version  = 1UL,
     .ota_flag = 0UL
