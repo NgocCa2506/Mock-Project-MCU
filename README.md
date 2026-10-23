@@ -191,11 +191,11 @@ Bootloader phát hiện ota_flag == 1
 
 ### `crc32.h` – Bootloader
 
-| Macro                      | Giá trị                      | Mô tả                                      |
-| -------------------------- | ------------------------------ | -------------------------------------------- |
-| `CRC_SELECTED_ALGORITHM` | `CRC_ALGORITHM_BITWISE`      | Bitwise, chậm nhất                         |
-|                            | `CRC_ALGORITHM_LOOKUP_TABLE` | Lookup table 256 phần tử *(mặc định)* |
-|                            | `CRC_ALGORITHM_HARDWARE`     | Hardware peripheral STM32, nhanh nhất       |
+| Macro                      | Giá trị                      | Mô tả                                      | Benchmark |
+| -------------------------- | ------------------------------ | -------------------------------------------- | --------- |
+| `CRC_SELECTED_ALGORITHM` | `CRC_ALGORITHM_BITWISE`      | Bitwise, chậm nhất                         | 486.442   |
+|                            | `CRC_ALGORITHM_LOOKUP_TABLE` | Lookup table 256 phần tử *(mặc định)* | 84.987    |
+|                            | `CRC_ALGORITHM_HARDWARE`     | Hardware peripheral STM32, nhanh nhất       | 36.721    |
 
 ---
 
@@ -320,8 +320,6 @@ File    : Debug/app_header.bin
 ```
 
 > File `.bin` này chứa App Header (`0x08080000`).
-
-
 
 Nạp file `Debug/application.bin` tại địa chỉ **`0x080A0000`** bằng STM32CubeProgrammer:
 
